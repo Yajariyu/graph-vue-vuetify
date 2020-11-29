@@ -18,12 +18,10 @@ export default {
             xAxes: [{
                  type: 'time',
                  time: {
-                      unit:'month'
+                      unit:'week' //Time could be change 'month'
                         },
 
-              },
-            
-        ]},
+                    },]},
         responsive: true, maintainAspectRatio: false ,
         tooltips: {
             mode: 'point'
@@ -42,7 +40,3 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>

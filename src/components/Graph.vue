@@ -1,6 +1,6 @@
 <template>
   <div>
-      <Selection :data="data"/>
+      <Selection :data="data" class="selection"/>
   </div>
 
 </template>
@@ -22,5 +22,7 @@ export default {
 </script>
 
 <style>
-
+  .selection{
+    height:100vh
+  }
 </style>

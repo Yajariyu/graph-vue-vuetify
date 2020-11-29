@@ -1,37 +1,32 @@
 <template>
-<div>
-  <v-container fluid>
-     <v-row >
-    <v-col
-      cols=10>
-    <Chart :chartData="fillData" />
-    </v-col>
-    <v-col 
-      cols=2 class="selector" >
-      <v-checkbox   @click='all' :label="`All`" v-model="allSelected"/> 
-      <v-item-group  no-gutters :key="user.userid" v-for="user in data_ar" class="items" >
-        <v-checkbox  @click="select" :id="user.userid" :value="user.userid" v-model=selected :color="user.color" v-bind:label="`User ${user.userid}`" class="item"/> 
-      </v-item-group>
-      
-    </v-col>
-  </v-row> 
-  </v-container>     
-</div>
-
+    <div>
+    <v-container fluid>
+        <v-row >
+            <v-col cols=10>
+                <Chart :chartData="fillData" class="chart" />
+            </v-col>
+            <v-col cols=2 class="selector" >
+                <v-checkbox   @click='all' :label="`All`" v-model="allSelected" class="all"/> 
+                <v-item-group  no-gutters :key="user.userid" v-for="user in data_ar" class="items" >
+                    <v-checkbox  @click="select" :id="user.userid" :value="user.userid" v-model=selected :color="user.color" v-bind:label="`User ${user.userid}`" class="item"/> 
+                </v-item-group>
+            </v-col>
+        </v-row> 
+    </v-container>     
+    </div>
 </template>
 
 <script>
 
 import Chart from './Chart.vue'
-// import vuescroll from 'vuescroll';
 export default {
- name: 'Selection',
-  components:{
+    name: 'Selection',
+      components:{
     Chart },
-  props:  {
-    data: {
-      type: Object,
-      default: null
+    props:  {
+        data: {
+          type: Object,
+          default: null
     },
   },
   data(){
@@ -92,88 +87,52 @@ export default {
   computed: {
     fillData: function () {
       let scores=[];
-      let dates=[];
-      let dates_first=[];
-      let dates_last=[];
-      let size='';
-      let max_index=null;
-      let size_bigger=0;
-
-
       let chartdata={
         datasets:[],
         labels:[]
       }
-      
 
+    //Format data to Chart
       for (const user in this.users) {
-        size=this.users[user].scores.length;
-        size_bigger=size_bigger > size? size_bigger:size;
-        max_index=user 
-      }
-
-      for (const user in this.users) {
-        size=this.users[user].scores.length;
-        const date_initial=this.users[user].scores[0].date.split(" ")[0];
-        const date_last=this.users[user].scores[size-1].date.split(" ")[0]
-        if(!(dates_first.includes(date_initial))) {
-          dates_first.push(date_initial);
-        }
-        if(!(dates_last.includes(date_last))) {
-          dates_last.push(date_last);
-        } 
-    /*  size_bigger=size_bigger > size? size_bigger:size;
-      dates= size_bigger > size ? dates :  [];
-      let change = size_bigger > size ?false :true;   */ 
       scores=[];
-      for (const info in this.users[user].scores) {
-                let date=this.users[user].scores[info].date.split(" ")[0];
-                if (max_index==user) {
-                  dates.push(date);
-                }
-                scores.push({x:date,
-                            y:this.users[user].scores[info].score})
+          for (const info in this.users[user].scores) {
+            let date=this.users[user].scores[info].date.split(" ")[0];
+            scores.push({x:date,
+                     y:this.users[user].scores[info].score})
              
+          }
+        chartdata['datasets'].push(
+                                  {label:'user'+(this.users[user].userid),
+                                  borderWidth: 2,
+                                  pointBackgroundColor: "white",
+                                  data:scores,
+                                  fill: false,
+                                  borderColor:this.users[user].color
+                                   })
       }
-         console.log(scores)  
-              chartdata['datasets'].push(
-                                        {label:'user'+(this.users[user].userid),
-                                        borderWidth: 2,
-                                        pointBackgroundColor: "white",
-                                        data:scores,
-                                        fill: false,
-                                        borderColor:this.users[user].color
-                                        })
-      }
-
-      dates_first=this.dates(dates_first);
-      dates_last=this.dates(dates_last);
-      if(dates_first[0]){
-        dates[0]=dates_first[0];
-      }
-      if(dates_last[0]){
-        dates.pop();
-        dates.push(...dates_last)
-      }
-
-    /*  chartdata['labels']=dates */ 
+      
+      //Return data formatted to Chart 
       return chartdata
       
-    },
-
-  
+    },  
 
     },
 }
 </script>
 
 <style>
-.selector{
-   overflow: scroll;
-}
+    .selector{
+        overflow: scroll;
+    }
 
-.item{
-  padding: 3px;
-  margin:0px;
-}
+    .selector, .chart{
+         height: 75vh;
+    }
+    .item, .all {
+        height:20px
+    }
+    .item, .items{
+        padding: 0px;
+        margin:0px;
+    }
 </style>
